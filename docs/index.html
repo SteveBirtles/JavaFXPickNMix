@@ -1,0 +1,507 @@
+
+<html>
+<head>
+<title>JavaFX Code Pick'n'Mix</title>
+<style>
+    body {
+        font-family: 'Open Sans', 'Arial';
+    }
+	h1 {
+        display: inline;
+        font-size: 32pt; 
+        color: navy;        
+    }    
+    h2 {
+        width: 100%;
+        color: navy;
+        background-color: #d0d0f0;
+        padding: 10px;
+        margin-top: 40px;
+        border-top: solid 4pt navy;        
+    }
+	.please_note {
+        font-size: small;
+		color: red;
+		font-style: italic;
+	}
+	.code {
+        background-color: #d8d8d8;
+        padding: 16px;
+    }
+    code {
+        font-weight: bold;
+        font-size: large;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+</style>
+</head>
+<body>
+
+<table style="width: 100%;"><tr><td>
+<img src="JavaFX_Logo.png" alt="JavaFX Logo" />
+</td><td style="width: 100%; vertical-align: bottom;">
+<h1>&nbsp;Code Pick'n'Mix</h1>
+</td><td style="text-align: right;">
+<img src="College_Logo.png" alt="College Logo" />
+</td></tr></table>
+<br/>
+
+<hr />
+<div class="please_note">Please note, the import statements are not included in these code snippets - press CTRL+ENTER in IntelliJ to add these automatically.</div>
+
+<h2>The basics</h2>
+
+<h3>Create a basic resizeable window</h3>
+<pre class="code">
+public class Main extends Application {
+
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        Pane root = new Pane();
+        
+        Scene scene = new Scene(root, 1024, 768);
+        
+        stage.setTitle("Hello World");
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+</pre>
+
+<h3>Make a window fixed size</h3>
+<div>Add this to your 'start' method, just before <code>stage.show();</code></div>
+<pre class="code">
+stage.setResizable(false);
+</pre>  
+
+<h3>Add a button to a pane</h3>
+<div>First, add this to your 'start' method. (Replace <code>root</code> with a different pane as appropriate.)</div>
+<pre class="code">
+Button myButton = new Button("Click me!");
+myButton.setPrefSize(100, 35);
+myButton.setOnAction((ActionEvent ae) -> doSomething(ae));
+root.getChildren().add(myButton);
+</pre>
+<div>Then add this method (pick a better name!) to your class. You can change the <code>null</code> with a text string if you want.</div>
+<pre class="code">
+public static void doSomething(ActionEvent ae) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Information Dialog");
+    alert.setHeaderText(null);
+    alert.setContentText("Wow, you clicked the button with style!");
+    alert.showAndWait();
+}
+</pre>  
+
+<h3>Style a button (or any other item for that matter!)</h3>
+<div><span style="color:red;">It is strongly recommend you use style sheets rather than <em>repeatedly</em> do this.</span></div>
+<pre class="code">
+myButton.setStyle( "-fx-border-color: transparent;" +
+                   "-fx-border-width: 0;" +
+                   "-fx-background-radius: 0;" +
+                   "-fx-background-color: navy;" +
+                   "-fx-font-size: 24;" +
+                   "-fx-font-family: monospace;" +
+                   "-fx-font-weight: bold;" +
+                   "-fx-text-fill: white;");
+</pre>
+
+<h3>Apply styles to lots of items with classes - the preferred way to style.</h3>
+<div>First, link your scene to a stylesheet in the 'start' method.</div>
+<pre class="code">
+scene.getStylesheets().add("stylesheet.css");
+</pre>
+<div>Create your style sheet (in the <strong>src</strong> folder) and add your style definitions.</div>
+<pre class="code" style="background-color: palegreen;">
+.funky_button {
+    -fx-text-fill: purple;
+    -fx-font-size: 16;
+    -fx-font-family: "Arial Black";
+    -fx-padding: 10;
+    -fx-background-color: lime;
+}
+</pre>
+<div>Then, you can style any item you want like this:</div>
+<pre class="code">
+myButton.getStyleClass().add("funky_button");
+</pre>
+
+
+<h2>Panes</h2>
+
+<h3>Make a VBox (vertical box) filled with buttons</h3>
+<div>The number 10 in the VBox constructor is the spacing of the items in pixels.</div>
+<br />
+<div>Obviously, you want the buttons to do something different. In this example they all call the same method.</div>
+<br />
+<div>You don't have to use an array if you don't want to. If you don't, add each button invidivually to the VBox with <code>boxOfButtons.getChildren().add(...);</code></div>
+<pre class="code">
+VBox boxOfButtons = new VBox(10);
+
+Button[] myButtons = new Button[5];
+
+myButtons[0] = new Button("Button number one");
+myButtons[0].setPrefSize(200, 50);
+myButtons[0].setOnAction((ActionEvent ae) -> doSomething(ae));
+
+myButtons[1] = new Button("Button number two");
+myButtons[1].setPrefSize(200, 50);
+myButtons[1].setOnAction((ActionEvent ae) -> doSomething(ae));
+
+myButtons[2] = new Button("Button number three");
+myButtons[2].setPrefSize(200, 50);
+myButtons[2].setOnAction((ActionEvent ae) -> doSomething(ae));
+
+myButtons[3] = new Button("Button number four");
+myButtons[3].setPrefSize(200, 50);
+myButtons[3].setOnAction((ActionEvent ae) -> doSomething(ae));
+
+myButtons[4] = new Button("Button number five");
+myButtons[4].setPrefSize(200, 50);
+myButtons[4].setOnAction((ActionEvent ae) -> doSomething(ae));
+
+boxOfButtons.getChildren().addAll(myButtons);
+
+root.getChildren().add(boxOfButtons);
+</pre>  
+<div>If you would like a HBox (horizontal box), simply replace V with H!</div>
+
+<h3>Add some padding around the outside of the controls</h3>
+<div>If you want the same padding on all sides, use this:</div>
+<pre class="code">
+nameOfHBox.setPadding(new Insets(20));
+</pre>
+<div>If you want to choose the top, right, bottom and left spacing individually, specify them in that order.</div>
+<pre class="code">
+nameOfHBox.setPadding(new Insets(20, 10, 20, 10));
+</pre>
+
+<h3>Arrange some controls on the left and some on the right within one HBox.</h3>
+<div>Pay attention to the allignments of the various sections. The use of 'Hgrow' on the right section is vital to this working.</div>
+<pre class="code">
+HBox leftAndRightBox = new HBox(20);
+leftAndRightBox.setAlignment(Pos.CENTER_LEFT);
+
+Button bottomButton1 = new Button("I am on the left.");
+leftAndRightBox.getChildren().add(bottomButton1);
+
+Button bottomButton2 = new Button("I am also on the left.");
+leftAndRightBox.getChildren().add(bottomButton2);
+
+HBox rightSection = new HBox(20);
+HBox.setHgrow(rightSection, Priority.ALWAYS);
+rightSection.setAlignment(Pos.CENTER_RIGHT);
+
+Button bottomButton3 = new Button("I am on the right.");
+rightSection.getChildren().add(bottomButton3);
+leftAndRightBox.getChildren().add(rightSection);
+</pre>
+
+<h3>Set up a BorderPane</h3>
+<div>First, change your root pane to be a BorderPane.</div>
+<pre class="code">
+BorderPane root = new BorderPane();
+</pre>
+<div>Then, create a pane for each of the five sections, put stuff in them and add them to the root BorderPane.</div>
+<pre class="code">
+VBox leftPane = new VBox(20);
+Button leftButton1 = new Button("I am left.");
+leftPane.getChildren().add(leftButton1);
+Button leftButton2 = new Button("I am left again.");
+leftPane.getChildren().add(leftButton2);
+root.setLeft(leftPane);
+leftPane.setAlignment(Pos.CENTER);
+BorderPane.setAlignment(leftPane, Pos.CENTER_LEFT);
+
+VBox rightPane = new VBox(20);
+Button rightButton1 = new Button("I am right.");
+rightPane.getChildren().add(rightButton1);
+Button rightButton2 = new Button("I am right again.");
+rightPane.getChildren().add(rightButton2);
+root.setRight(rightPane);
+rightPane.setAlignment(Pos.CENTER);
+BorderPane.setAlignment(rightPane, Pos.CENTER_RIGHT);
+
+VBox topPane = new VBox(20);
+Button topButton1 = new Button("I am top.");
+topPane.getChildren().add(topButton1);
+Button topButton2 = new Button("I am top again.");
+topPane.getChildren().add(topButton2);
+root.setTop(topPane);
+topPane.setAlignment(Pos.CENTER);
+BorderPane.setAlignment(topPane, Pos.TOP_CENTER);
+
+VBox bottomPane = new VBox(20);
+Button bottomButton1 = new Button("I am bottom.");
+bottomPane.getChildren().add(bottomButton1);
+Button bottomButton2 = new Button("I am bottom again.");
+bottomPane.getChildren().add(bottomButton2);
+root.setBottom(bottomPane);
+bottomPane.setAlignment(Pos.CENTER);
+BorderPane.setAlignment(bottomPane, Pos.BOTTOM_CENTER);
+
+VBox centerPane = new VBox(20);
+Button centerButton1 = new Button("I am centre.");
+centerPane.getChildren().add(centerButton1);
+Button centerButton2 = new Button("I am centre again.");
+centerPane.getChildren().add(centerButton2);
+root.setCenter(centerPane);
+centerPane.setAlignment(Pos.CENTER);
+BorderPane.setAlignment(centerPane, Pos.CENTER);
+</pre>  
+
+
+<!--http://zetcode.com/gui/javafx/layoutpanes/-->
+
+
+<h3>Set up a GridPane</h3>
+<pre class="code" style="background-color: pink;">
+... under construction ...
+</pre>  
+
+<h3>Set up a FlowPane</h3>
+<pre class="code" style="background-color: pink;">
+... under construction ...
+</pre>  
+
+<h3>Add a menu bar</h3>
+<div>First, your root pane needs to be a VBox. If you already have a different root pane (e.g. a BorderPane), rename it before doing this first step.</div>
+<pre class="code">
+VBox root = new VBox();
+</pre>
+<div>Here is the code to create a menubar with three menus, each with three items.</div>
+<pre class="code">
+MenuBar myMenu = new MenuBar();
+
+Menu numbersMenu = new Menu("Numbers");
+MenuItem numbersItem1 = new MenuItem("One");
+MenuItem numbersItem2 = new MenuItem("Two");
+MenuItem numbersItem3 = new MenuItem("Three");
+numbersMenu.getItems().addAll(numbersItem1, numbersItem2, numbersItem3);
+
+Menu coloursMenu = new Menu("Colours");
+MenuItem coloursItem1 = new MenuItem("Red");
+MenuItem coloursItem2 = new MenuItem("Green");
+MenuItem coloursItem3 = new MenuItem("Blue");
+coloursMenu.getItems().addAll(coloursItem1, coloursItem2, coloursItem3);
+
+Menu shapesMenu = new Menu("Shapes");
+MenuItem shapesItem1 = new MenuItem("Triangle");
+MenuItem shapesItem2 = new MenuItem("Square");
+MenuItem shapesItem3 = new MenuItem("Circle");
+shapesMenu.getItems().addAll(shapesItem1, shapesItem2, shapesItem3);
+
+myMenu.getMenus().addAll(numbersMenu, coloursMenu, shapesMenu);
+root.getChildren().add(myMenu);
+</pre>
+<div>Finally, if you were using a BorderPane (or similar) originally and want that under the menu, you will need to bind the BorderPane's height to that of the root VBox so it fills the space.</div>
+<pre class="code">
+BorderPane borderPane = new BorderPane();
+borderPane.prefHeightProperty().bind(root.heightProperty());
+root.getChildren().add(borderPane);
+</pre>
+
+
+<h3>Open a new stage</h3>
+<div>First, set up a button to launch an 'openNewStage' method, passing it the root pane.</div>
+<pre class="code">
+someButton.setOnAction((ActionEvent ae) -> openNewStage(root));
+</pre>
+
+<div>Create the aforementioned method which will open the new stage.</div>
+<pre class="code">
+public static void openNewStage(Pane parent) {
+    StageTwo newStage = new StageTwo(parent);
+}
+</pre>
+
+<div>You'll need an entirely new Java class for the new stage, here is a basic example. It has been designed to disable the parent stage's root pane when the new stage opens, freezing all the controls on that stage, and renable the parent stage when it is closed. Note the static 'parent' field that stores the original stage's root pane.</div>
+<pre class="code">
+public class StageTwo {
+
+    static Pane parent;
+
+    public StageTwo(Pane theParent) {
+
+        Stage stage = new Stage();
+        parent = theParent;
+        parent.setDisable(true);
+        start(stage);
+
+    }
+
+    public void start(Stage stage) {
+
+        Pane root = new Pane();
+        Scene scene = new Scene(root, 1024, 768);
+        stage.setTitle("This is another scene.");
+        stage.setScene(scene);
+        stage.setOnCloseRequest((WindowEvent we) -> closeStage(stage));
+        stage.show();
+
+    }
+
+    public void closeStage(Stage stage) {
+
+        parent.setDisable(false);
+        stage.close();
+
+    }
+
+}
+</pre>
+
+<h2>Non-trivial controls</h2>
+
+
+<!--http://zetcode.com/gui/javafx/controls/-->
+<!--http://zetcode.com/gui/javafx/controlsII/-->
+
+
+<h3>Set up a ComboBox</h3>
+<pre class="code" style="background-color: pink;">
+... under construction ...
+</pre>  
+
+<h3>Set up Sliders and ProgressBars</h3>
+<pre class="code" style="background-color: pink;">
+... under construction ...
+</pre>  
+
+<h3>Set up a TableView</h3>
+<pre class="code" style="background-color: pink;">
+... under construction ...
+</pre>  
+
+<h3>Set up an Accordion</h3>
+<pre class="code" style="background-color: pink;">
+... under construction ...
+</pre>  
+
+<br />
+<div>For the full list of JavaFX Controls, <a href="https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/ui_controls.htm">visit Oracle's site</a></div>
+
+<h2>More window and input controls</h2>
+
+<h3>Add an exit confirmation prompt</h3>
+<div>First, add this to your 'start' method, just before <code>stage.show();</code></div>
+<pre class="code">
+stage.setOnCloseRequest((WindowEvent we) -> exitPrompt(we));
+</pre>  
+<div>Then add this method to your class.</div>
+<pre class="code">
+public static void exitPrompt(WindowEvent we) {
+
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirmation Dialog");
+    alert.setHeaderText("Are you sure you want to exit?");
+
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.get() == ButtonType.OK){
+        System.exit(0);
+    } else {
+        we.consume();
+    }
+
+}
+</pre>  
+
+<h3>Create a set of 'pressed keys'</h3>
+<div>Add this to the top of class (just after <code>public class ... {</code>)</div>
+<pre class="code">
+static HashSet<KeyCode> keysPressed = new HashSet<>();
+</pre>  
+<div>Then, add this just before <code>stage.show();</code> in your 'start' method.</div> 
+<pre class="code">
+scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> keysPressed.add(event.getCode()));
+scene.addEventFilter(KeyEvent.KEY_RELEASED, event -> keysPressed.remove(event.getCode()));
+</pre>
+<div>Finally, any time you want to check what keys are pressed, use this:</div>
+<pre class="code">
+for(KeyCode k : keysPressed) {
+    if (k == KeyCode.A) {
+        // Code goes here
+    }
+    else if (k == KeyCode.B) {
+        // More code goes here
+    }
+    //etc...
+}
+</pre>
+
+<h2>Graphics</h2>
+
+<h3>Make a window full screen</h3>
+<div>First, change your scene constructor to omit the size.</div>
+<pre class="code">
+Scene scene = new Scene(root);
+</pre>
+<div>Then, add these lines to your 'start' method, just before <code>stage.show();</code></div>
+<pre class="code">
+stage.setResizable(false);
+stage.setFullScreen(true);
+stage.setWidth(1280);
+stage.setHeight(1080);
+</pre>  
+
+<h3>Create a full screen graphics canvas</h3>
+<pre class="code">
+public static GraphicsContext gc;
+
+@Override
+public void start(Stage stage) throws Exception{
+
+    Pane root = new Pane();
+    Scene scene = new Scene(root);
+
+    stage.setTitle("Full screen canvas");
+    stage.setResizable(false);
+    stage.setFullScreen(true);
+    stage.setWidth(1280);
+    stage.setHeight(1024);
+    stage.setScene(scene);
+    stage.show();
+
+    Canvas canvas = new Canvas();
+    canvas.setWidth(1280);
+    canvas.setHeight(1024);
+    root.getChildren().add(canvas);
+
+    gc = canvas.getGraphicsContext2D();
+
+}
+</pre>  
+
+<h3>Draw on to a graphics canvas</h3>
+<div>This assumes a <code>GraphicsContext</code> object called <code>gc</code> has been initialised.</div>
+<pre class="code">
+gc.setFill(Color.BLACK);
+gc.fillRect(0,0, 1280, 1024);
+
+gc.setFill(Color.RED);
+gc.fillRect(100, 100, 800, 600);
+</pre>  
+<div>For more drawing tools, see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html">this website.</a></div>
+
+<h3>Draw images on to a canvas</h3>
+<div>Again, requries an initialised <code>gc</code> object. Place your image file in the <strong>src</strong> folder.</div>
+<pre class="code">
+Image cake = new Image("cake.png");
+gc.drawImage(cake, 0,0);
+</pre>  
+
+<br />
+<hr />
+<div><strong>Not found what you're looking for?</strong> Email <a href="mailto:sbirtles@farnborough.ac.uk">sbirtles@farnborough.ac.uk</a> with your requests.</div>
+<hr />
+
+</body>
+</html>
+
