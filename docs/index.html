@@ -491,9 +491,12 @@ gc.fillRect(100, 100, 800, 600);
 <div>For more drawing tools, see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html">this website.</a></div>
 
 <h3>Draw images on to a canvas</h3>
-<div>Again, requries an initialised <code>gc</code> object. Place your image file in the <strong>src</strong> folder.</div>
+<div>Place your image file in the <strong>src</strong> folder. First, load the image when the stage is prepared:</div>
 <pre class="code">
 Image cake = new Image("cake.png");
+</pre>  
+<div>Draw the image onto a canvas laster on. Again, this requries an initialised <code>gc</code> object.</div>
+<pre class="code">
 gc.drawImage(cake, 0,0);
 </pre>  
 
