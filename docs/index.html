@@ -19,8 +19,7 @@
         margin-top: 40px;
         border-top: solid 4pt navy;        
     }
-	.please_note {
-        font-size: small;
+	.please_note {        
 		color: red;
 		font-style: italic;
 	}
@@ -48,7 +47,7 @@
 <br/>
 
 <hr />
-<div class="please_note">Please note, the import statements are not included in these code snippets - press CTRL+ENTER in IntelliJ to add these automatically.</div>
+<div class="please_note">Please note, the import statements are not included in these code snippets - press CTRL+ENTER in IntelliJ to add these automatically. When given choice, always use the import starting with java<strong>fx</strong>, don't use javax, awt or swing imports.</div>
 
 <h2>The basics</h2>
 
@@ -119,7 +118,7 @@ myButton.setStyle( "-fx-border-color: transparent;" +
 scene.getStylesheets().add("stylesheet.css");
 </pre>
 <div>Create your style sheet (in the <strong>src</strong> folder) and add your style definitions.</div>
-<pre class="code" style="background-color: palegreen;">
+<pre class="code" style="background-color: #cceecc;">
 .funky_button {
     -fx-text-fill: purple;
     -fx-font-size: 16;
@@ -149,29 +148,29 @@ Button[] myButtons = new Button[5];
 
 myButtons[0] = new Button("Button number one");
 myButtons[0].setPrefSize(200, 50);
-myButtons[0].setOnAction((ActionEvent ae) -> doSomething(ae));
+myButtons[0].setOnAction((ActionEvent ae) -> doSomething());
 
 myButtons[1] = new Button("Button number two");
 myButtons[1].setPrefSize(200, 50);
-myButtons[1].setOnAction((ActionEvent ae) -> doSomething(ae));
+myButtons[1].setOnAction((ActionEvent ae) -> doSomething());
 
 myButtons[2] = new Button("Button number three");
 myButtons[2].setPrefSize(200, 50);
-myButtons[2].setOnAction((ActionEvent ae) -> doSomething(ae));
+myButtons[2].setOnAction((ActionEvent ae) -> doSomething());
 
 myButtons[3] = new Button("Button number four");
 myButtons[3].setPrefSize(200, 50);
-myButtons[3].setOnAction((ActionEvent ae) -> doSomething(ae));
+myButtons[3].setOnAction((ActionEvent ae) -> doSomething());
 
 myButtons[4] = new Button("Button number five");
 myButtons[4].setPrefSize(200, 50);
-myButtons[4].setOnAction((ActionEvent ae) -> doSomething(ae));
+myButtons[4].setOnAction((ActionEvent ae) -> doSomething());
 
 boxOfButtons.getChildren().addAll(myButtons);
 
 root.getChildren().add(boxOfButtons);
 </pre>  
-<div>If you would like a HBox (horizontal box), simply replace V with H!</div>
+<div>If you would like a HBox (horizontal box), simply replace V with H! Don't forget you need a <code>doSomething()</code> method.</div>
 
 <h3>Add some padding around the outside of the controls</h3>
 <div>If you want the same padding on all sides, use this:</div>
@@ -257,22 +256,49 @@ centerPane.setAlignment(Pos.CENTER);
 BorderPane.setAlignment(centerPane, Pos.CENTER);
 </pre>  
 
-
-<!--http://zetcode.com/gui/javafx/layoutpanes/-->
-
-
 <h3>Set up a GridPane</h3>
-<pre class="code" style="background-color: pink;">
-... under construction ...
+<div>First, prepare your GridPane. In this case, the root is being used.</div>
+<pre class="code">
+GridPane root = new GridPane();
+root.setHgap(10);
+root.setVgap(10);
+root.setPadding(new Insets(10));
+</pre>
+<div>Fill your GridPane with items, specifying the column and row for each.</div>
+<pre class="code">
+for (int x = 0; x < 5; x++) {
+    for (int y = 0; y < 5; y++) {
+        Button exampleButton = new Button(Integer.toString(x) + ", " + Integer.toString(y));
+        exampleButton.setPrefSize(100, 100);
+        root.add(exampleButton, x, y);
+    }
+}
 </pre>  
 
-<h3>Set up a FlowPane</h3>
-<pre class="code" style="background-color: pink;">
-... under construction ...
-</pre>  
+<h3>Set up a TilePane inside a ScrollPane</h3>
+<div>This example assumes the root in a Pane. Replace root with the location you wish to add the scrolling TilePane.</div>
+<pre class="code">
+ScrollPane scrollPane = new ScrollPane();
+scrollPane.setFitToWidth(true);
+root.getChildren().add(scrollPane);
+
+TilePane tilePane = new TilePane();
+tilePane.prefWidthProperty().bind(root.widthProperty());
+tilePane.prefHeightProperty().bind(root.heightProperty());
+tilePane.setHgap(10);
+tilePane.setVgap(10);
+tilePane.setPadding(new Insets(20));
+scrollPane.setContent(tilePane);
+
+for (int i = 1; i <= 256; i++) {
+    Button exampleButton = new Button(Integer.toString(i));
+    exampleButton.setPrefSize(100, 100);
+    tilePane.getChildren().add(exampleButton);
+}
+</pre>
 
 <h3>Add a menu bar</h3>
-<div>First, your root pane needs to be a VBox. If you already have a different root pane (e.g. a BorderPane), rename it before doing this first step.</div>
+<div>First, your root pane needs to be a VBox. If you already have a different root pane (e.g. a BorderPane), rename it from root to something else (don't change it's class) before making a new VBox root.</div>
 <pre class="code">
 VBox root = new VBox();
 </pre>
@@ -322,7 +348,7 @@ public static void openNewStage(Pane parent) {
 }
 </pre>
 
-<div>You'll need an entirely new Java class for the new stage, here is a basic example. It has been designed to disable the parent stage's root pane when the new stage opens, freezing all the controls on that stage, and renable the parent stage when it is closed. Note the static 'parent' field that stores the original stage's root pane.</div>
+<div>You'll need an entirely new Java class for the new stage, here is a basic example. It has been designed to disable the parent stage's root pane when the new stage opens, freezing all the controls on that stage, and re-enable the parent stage when it is closed. Note the static 'parent' field that stores the original stage's root pane.</div>
 <pre class="code">
 public class StageTwo {
 
@@ -359,11 +385,6 @@ public class StageTwo {
 </pre>
 
 <h2>Non-trivial controls</h2>
-
-
-<!--http://zetcode.com/gui/javafx/controls/-->
-<!--http://zetcode.com/gui/javafx/controlsII/-->
-
 
 <h3>Set up a ComboBox</h3>
 <pre class="code" style="background-color: pink;">
@@ -499,6 +520,29 @@ Image cake = new Image("cake.png");
 <pre class="code">
 gc.drawImage(cake, 0,0);
 </pre>  
+
+<h3>Set up a repeating event</h3>
+<div>If you want something to happen at a full 60 frames per second, use an AnimationTimer object.</div>
+<pre class="code">
+new AnimationTimer() {
+    @Override
+    public void handle(long now) {
+        doSomething();
+    }
+}.start();
+</pre>  
+<div>If you want an event to happen less frequently, say every 1 second (1000ms), use a Timeline object.</div>
+<pre class="code">
+Timeline timeline = new Timeline(
+    new KeyFrame(
+        Duration.millis(1000), 
+        ae -> doSomething();
+    )
+);
+timeline.setCycleCount(Animation.INDEFINITE);
+timeline.play();
+</pre>
+<div>Both of these need to be added to the end of the 'start' method. Obviously, you also need to write the <code>doSomething()</code> method!</div>
 
 <br />
 <hr />
