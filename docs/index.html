@@ -387,21 +387,108 @@ public class StageTwo {
 <h2>Non-trivial controls</h2>
 
 <h3>Set up a ComboBox</h3>
-<pre class="code" style="background-color: pink;">
-... under construction ...
+<div>Replace root with the target pane. In this example, the first item (index 0) has been pre-selected.</div>
+<pre class="code">
+ObservableList<String> options = FXCollections.observableArrayList("Option 1", "Option 2", "Option 3");
+ComboBox comboBox = new ComboBox(options);
+comboBox.getSelectionModel().select(0);
+
+root.getChildren().add(comboBox);
 </pre>  
 
 <h3>Set up Sliders and ProgressBars</h3>
-<pre class="code" style="background-color: pink;">
-... under construction ...
-</pre>  
+<div>In this example, the slider controls the progress bar, but a listener can be added to many other properties. The root pane is a VBox, so change as required.</div>
+<pre class="code">
+Slider slider = new Slider();
+slider.setMin(0);
+slider.setMax(100);
+slider.setValue(50);
 
-<h3>Set up a TableView</h3>
-<pre class="code" style="background-color: pink;">
-... under construction ...
+ProgressBar progressBar = new ProgressBar();
+progressBar.setPrefSize(400, 30);
+progressBar.setProgress(0.5);
+
+slider.valueProperty().addListener(
+        (observable, old_value, new_value) -> progressBar.setProgress(new_value.doubleValue() / 100)
+);
+
+root.getChildren().addAll(slider, progressBar);
 </pre>  
 
 <h3>Set up an Accordion</h3>
+<div>In this example, the buttons are added lazily. In reality, you need to define your controls on seperate lines of code or they won't actually do anything.</div>
+<pre class="code">
+Accordion root = new Accordion();
+
+TitledPane numbersPane = new TitledPane();
+numbersPane.setText("Numbers");
+VBox numbersVBox = new VBox(20);
+numbersVBox.setPadding(new Insets(20));
+numbersVBox.getChildren().add(new Button("One"));
+numbersVBox.getChildren().add(new Button("Two"));
+numbersVBox.getChildren().add(new Button("Three"));
+numbersPane.setContent(numbersVBox);
+
+TitledPane coloursPane = new TitledPane();
+coloursPane.setText("Colours");
+VBox coloursVBox = new VBox(20);
+coloursVBox.setPadding(new Insets(20));
+coloursVBox.getChildren().add(new Button("Red"));
+coloursVBox.getChildren().add(new Button("Green"));
+coloursVBox.getChildren().add(new Button("Blue"));
+coloursPane.setContent(coloursVBox);
+
+TitledPane shapesPane = new TitledPane();
+shapesPane.setText("Shapes");
+VBox shapesVBox = new VBox(20);
+shapesVBox.setPadding(new Insets(20));
+shapesVBox.getChildren().add(new Button("Triangle"));
+shapesVBox.getChildren().add(new Button("Square"));
+shapesVBox.getChildren().add(new Button("Circle"));
+shapesPane.setContent(shapesVBox);
+
+root.getPanes().addAll(numbersPane, coloursPane, shapesPane);
+</pre>  
+
+<h3>Set up an TabPane</h3>
+<div>This is exceedingly similar to the Accordion.</div>
+<pre class="code">
+TabPane root = new TabPane();
+
+Tab numbersTab = new Tab();
+numbersTab.setText("Numbers");
+numbersTab.setClosable(false);
+VBox numbersVBox = new VBox(20);
+numbersVBox.setPadding(new Insets(20));
+numbersVBox.getChildren().add(new Button("One"));
+numbersVBox.getChildren().add(new Button("Two"));
+numbersVBox.getChildren().add(new Button("Three"));
+numbersTab.setContent(numbersVBox);
+
+Tab coloursTab = new Tab();
+coloursTab.setText("Colours");
+coloursTab.setClosable(false);
+VBox coloursVBox = new VBox(20);
+coloursVBox.setPadding(new Insets(20));
+coloursVBox.getChildren().add(new Button("Red"));
+coloursVBox.getChildren().add(new Button("Green"));
+coloursVBox.getChildren().add(new Button("Blue"));
+coloursTab.setContent(coloursVBox);
+
+Tab shapesTab = new Tab();
+shapesTab.setText("Shapes");
+shapesTab.setClosable(false);
+VBox shapesVBox = new VBox(20);
+shapesVBox.setPadding(new Insets(20));
+shapesVBox.getChildren().add(new Button("Triangle"));
+shapesVBox.getChildren().add(new Button("Square"));
+shapesVBox.getChildren().add(new Button("Circle"));
+shapesTab.setContent(shapesVBox);
+
+root.getTabs().addAll(numbersTab, coloursTab, shapesTab);
+</pre>
+
+<h3>Set up a TableView</h3>
 <pre class="code" style="background-color: pink;">
 ... under construction ...
 </pre>  
