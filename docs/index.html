@@ -15,7 +15,8 @@
         width: 100%;
         color: navy;
         background-color: #d0d0f0;
-        padding: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;        
         margin-top: 40px;
         border-top: solid 4pt navy;        
     }
@@ -47,11 +48,67 @@
 <br/>
 
 <hr />
+
+<h2>&nbsp;Contents</h2>
+
+<table style="width: 100%;">
+    <tr>
+        <td>
+            <h3>The basics</h3>
+            <ul>
+                <li><a href="#section1">Create a basic resizeable window</a></li>
+                <li><a href="#section2">Make a window fixed size</a></li>
+                <li><a href="#section3">Add a button to a pane</a></li>
+                <li><a href="#section4">Style a button (or any other item for that matter!)</a></li>
+                <li><a href="#section5">Apply styles to lots of items with classes - the preferred way to style.</a></li>
+                <li><a href="#section6">Open a new stage</a></li>
+                <li><a href="#section7">Add an exit confirmation prompt</a></li>
+            </ul>
+        </td>
+        <td>
+            <h3>Panes</h3>
+            <ul>
+                <li><a href="#section8">Make a VBox (vertical box) filled with buttons</a></li>
+                <li><a href="#section9">Add some padding around the outside of the controls</a></li>
+                <li><a href="#section10">Arrange some controls on the left and some on the right within one HBox.</a></li>
+                <li><a href="#section11">Set up a BorderPane</a></li>
+                <li><a href="#section12">Set up a GridPane</a></li>
+                <li><a href="#section13">Set up a TilePane inside a ScrollPane</a></li>
+                <li><a href="#section14">Set up an Accordion</a></li>
+                <li><a href="#section15">Set up a TabPane</a></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h3>Non-trivial controls</h3>
+            <ul>
+                <li><a href="#section16">Set up a ComboBox</a></li>
+                <li><a href="#section17">Set up Sliders and ProgressBars</a></li>
+                <li><a href="#section18">Add a menu bar</a></li>
+                <li><a href="#section19">Set up a TableView</a></li>
+            </ul>
+        </td>
+        <td>
+            <h3>Graphics and real time interactivity</h3>
+            <ul>
+                <li><a href="#section20">Make a window full screen</a></li>
+                <li><a href="#section21">Create a full screen graphics canvas</a></li>
+                <li><a href="#section22">Draw on to a graphics canvas</a></li>
+                <li><a href="#section23">Draw images on to a canvas</a></li>
+                <li><a href="#section24">Create a set of 'pressed keys'</a></li>
+                <li><a href="#section25">Set up a repeating event</a></li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<br />
 <div class="please_note">Please note, the import statements are not included in these code snippets - press CTRL+ENTER in IntelliJ to add these automatically. When given choice, always use the import starting with java<strong>fx</strong>, don't use javax, awt or swing imports.</div>
 
-<h2>The basics</h2>
+<h2>&nbsp;The basics</h2>
 
-<h3>Create a basic resizeable window</h3>
+<h3 id="section1">Create a basic resizeable window</h3>
 <pre class="code">
 public class Main extends Application {
 
@@ -74,13 +131,13 @@ public class Main extends Application {
 }
 </pre>
 
-<h3>Make a window fixed size</h3>
+<h3 id="section2">Make a window fixed size</h3>
 <div>Add this to your 'start' method, just before <code>stage.show();</code></div>
 <pre class="code">
 stage.setResizable(false);
 </pre>  
 
-<h3>Add a button to a pane</h3>
+<h3 id="section3">Add a button to a pane</h3>
 <div>First, add this to your 'start' method. (Replace <code>root</code> with a different pane as appropriate.)</div>
 <pre class="code">
 Button myButton = new Button("Click me!");
@@ -99,7 +156,7 @@ public static void doSomething(ActionEvent ae) {
 }
 </pre>  
 
-<h3>Style a button (or any other item for that matter!)</h3>
+<h3 id="section4">Style a button (or any other item for that matter!)</h3>
 <div><span style="color:red;">It is strongly recommend you use style sheets rather than <em>repeatedly</em> do this.</span></div>
 <pre class="code">
 myButton.setStyle( "-fx-border-color: transparent;" +
@@ -112,7 +169,7 @@ myButton.setStyle( "-fx-border-color: transparent;" +
                    "-fx-text-fill: white;");
 </pre>
 
-<h3>Apply styles to lots of items with classes - the preferred way to style.</h3>
+<h3 id="section5">Apply styles to lots of items with classes - the preferred way to style.</h3>
 <div>First, link your scene to a stylesheet in the 'start' method.</div>
 <pre class="code">
 scene.getStylesheets().add("stylesheet.css");
@@ -133,7 +190,7 @@ myButton.getStyleClass().add("funky_button");
 </pre>
 
 
-<h3>Open a new stage</h3>
+<h3 id="section6">Open a new stage</h3>
 <div>First, set up a button to launch an 'openNewStage' method, passing it the root pane.</div>
 <pre class="code">
 someButton.setOnAction((ActionEvent ae) -> openNewStage(root));
@@ -182,7 +239,7 @@ public class StageTwo {
 }
 </pre>
 
-<h3>Add an exit confirmation prompt</h3>
+<h3 id="section7">Add an exit confirmation prompt</h3>
 <div>First, add this to your 'start' method, just before <code>stage.show();</code></div>
 <pre class="code">
 stage.setOnCloseRequest((WindowEvent we) -> exitPrompt(we));
@@ -205,9 +262,9 @@ public static void exitPrompt(WindowEvent we) {
 }
 </pre>  
 
-<h2>Panes</h2>
+<h2>&nbsp;Panes</h2>
 
-<h3>Make a VBox (vertical box) filled with buttons</h3>
+<h3 id="section8">Make a VBox (vertical box) filled with buttons</h3>
 <div>The number 10 in the VBox constructor is the spacing of the items in pixels.</div>
 <br />
 <div>Obviously, you want the buttons to do something different. In this example they all call the same method.</div>
@@ -244,7 +301,7 @@ root.getChildren().add(boxOfButtons);
 </pre>  
 <div>If you would like a HBox (horizontal box), simply replace V with H! Don't forget you need a <code>doSomething()</code> method.</div>
 
-<h3>Add some padding around the outside of the controls</h3>
+<h3 id="section9">Add some padding around the outside of the controls</h3>
 <div>If you want the same padding on all sides, use this:</div>
 <pre class="code">
 nameOfHBox.setPadding(new Insets(20));
@@ -254,7 +311,7 @@ nameOfHBox.setPadding(new Insets(20));
 nameOfHBox.setPadding(new Insets(20, 10, 20, 10));
 </pre>
 
-<h3>Arrange some controls on the left and some on the right within one HBox.</h3>
+<h3 id="section10">Arrange some controls on the left and some on the right within one HBox.</h3>
 <div>Pay attention to the allignments of the various sections. The use of 'Hgrow' on the right section is vital to this working.</div>
 <pre class="code">
 HBox leftAndRightBox = new HBox(20);
@@ -275,7 +332,7 @@ rightSection.getChildren().add(bottomButton3);
 leftAndRightBox.getChildren().add(rightSection);
 </pre>
 
-<h3>Set up a BorderPane</h3>
+<h3 id="section11">Set up a BorderPane</h3>
 <div>First, change your root pane to be a BorderPane.</div>
 <pre class="code">
 BorderPane root = new BorderPane();
@@ -328,7 +385,7 @@ centerPane.setAlignment(Pos.CENTER);
 BorderPane.setAlignment(centerPane, Pos.CENTER);
 </pre>  
 
-<h3>Set up a GridPane</h3>
+<h3 id="section12">Set up a GridPane</h3>
 <div>First, prepare your GridPane. In this case, the root is being used.</div>
 <pre class="code">
 GridPane root = new GridPane();
@@ -347,7 +404,7 @@ for (int x = 0; x < 5; x++) {
 }
 </pre>  
 
-<h3>Set up a TilePane inside a ScrollPane</h3>
+<h3 id="section13">Set up a TilePane inside a ScrollPane</h3>
 <div>This example assumes the root in a Pane. Replace root with the location you wish to add the scrolling TilePane.</div>
 <pre class="code">
 ScrollPane scrollPane = new ScrollPane();
@@ -370,7 +427,7 @@ for (int i = 1; i <= 256; i++) {
 </pre>
 
 
-<h3>Set up an Accordion</h3>
+<h3 id="section14">Set up an Accordion</h3>
 <div>In this example, the buttons are added lazily. In reality, you need to define your controls on seperate lines of code or they won't actually do anything.</div>
 <pre class="code">
 Accordion root = new Accordion();
@@ -405,7 +462,7 @@ shapesPane.setContent(shapesVBox);
 root.getPanes().addAll(numbersPane, coloursPane, shapesPane);
 </pre>  
 
-<h3>Set up a TabPane</h3>
+<h3 id="section15">Set up a TabPane</h3>
 <div>This is exceedingly similar to the Accordion.</div>
 <pre class="code">
 TabPane root = new TabPane();
@@ -443,9 +500,9 @@ shapesTab.setContent(shapesVBox);
 root.getTabs().addAll(numbersTab, coloursTab, shapesTab);
 </pre>
 
-<h2>Non-trivial controls</h2>
+<h2>&nbsp;Non-trivial controls</h2>
 
-<h3>Set up a ComboBox</h3>
+<h3 id="section16">Set up a ComboBox</h3>
 <div>Replace root with the target pane. In this example, the first item (index 0) has been pre-selected.</div>
 <pre class="code">
 ObservableList<String> options = FXCollections.observableArrayList("Option 1", "Option 2", "Option 3");
@@ -455,7 +512,7 @@ comboBox.getSelectionModel().select(0);
 root.getChildren().add(comboBox);
 </pre>  
 
-<h3>Set up Sliders and ProgressBars</h3>
+<h3 id="section17">Set up Sliders and ProgressBars</h3>
 <div>In this example, the slider controls the progress bar, but a listener can be added to many other properties. The root pane is a VBox, so change as required.</div>
 <pre class="code">
 Slider slider = new Slider();
@@ -474,7 +531,7 @@ slider.valueProperty().addListener(
 root.getChildren().addAll(slider, progressBar);
 </pre>  
 
-<h3>Add a menu bar</h3>
+<h3 id="section18">Add a menu bar</h3>
 <div>First, your root pane needs to be a VBox. If you already have a different root pane (e.g. a BorderPane), rename it from root to something else (don't change it's class) before making a new VBox root.</div>
 <pre class="code">
 VBox root = new VBox();
@@ -511,7 +568,7 @@ borderPane.prefHeightProperty().bind(root.heightProperty());
 root.getChildren().add(borderPane);
 </pre>
 
-<h3>Set up a TableView</h3>
+<h3 id="section19">Set up a TableView</h3>
 <div>TableViews require model classes set up with JavaFX properties. Here is an example called <strong>Person.java</strong></div>
 <pre class="code" style="background-color: #cceecc;">
 import javafx.beans.property.SimpleStringProperty;
@@ -568,9 +625,9 @@ table.getColumns().add(emailColumn);
 root.getChildren().add(table);
 </pre>  
 
-<h2>Graphics and real time interactivity</h2>
+<h2>&nbsp;Graphics and real time interactivity</h2>
 
-<h3>Make a window full screen</h3>
+<h3 id="section20">Make a window full screen</h3>
 <div>First, change your scene constructor to omit the size.</div>
 <pre class="code">
 Scene scene = new Scene(root);
@@ -583,7 +640,7 @@ stage.setWidth(1280);
 stage.setHeight(1080);
 </pre>  
 
-<h3>Create a full screen graphics canvas</h3>
+<h3 id="section21">Create a full screen graphics canvas</h3>
 <pre class="code">
 public static GraphicsContext gc;
 
@@ -611,7 +668,7 @@ public void start(Stage stage) throws Exception{
 }
 </pre>  
 
-<h3>Draw on to a graphics canvas</h3>
+<h3 id="section22">Draw on to a graphics canvas</h3>
 <div>This assumes a <code>GraphicsContext</code> object called <code>gc</code> has been initialised.</div>
 <pre class="code">
 gc.setFill(Color.BLACK);
@@ -622,7 +679,7 @@ gc.fillRect(100, 100, 800, 600);
 </pre>  
 <div>For more drawing tools, see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html">this website.</a></div>
 
-<h3>Draw images on to a canvas</h3>
+<h3 id="section23">Draw images on to a canvas</h3>
 <div>Place your image file in the <strong>src</strong> folder. First, load the image when the stage is prepared:</div>
 <pre class="code">
 Image cake = new Image("cake.png");
@@ -632,7 +689,7 @@ Image cake = new Image("cake.png");
 gc.drawImage(cake, 0,0);
 </pre>  
 
-<h3>Create a set of 'pressed keys'</h3>
+<h3 id="section24">Create a set of 'pressed keys'</h3>
 <div>Add this to the top of class (just after <code>public class ... {</code>)</div>
 <pre class="code">
 static HashSet<KeyCode> keysPressed = new HashSet&lt;&gt;();
@@ -655,7 +712,7 @@ for(KeyCode k : keysPressed) {
 }
 </pre>
 
-<h3>Set up a repeating event</h3>
+<h3 id="section25">Set up a repeating event</h3>
 <div>If you want something to happen at a full 60 frames per second, use an AnimationTimer object.</div>
 <pre class="code">
 new AnimationTimer() {
