@@ -133,6 +133,78 @@ myButton.getStyleClass().add("funky_button");
 </pre>
 
 
+<h3>Open a new stage</h3>
+<div>First, set up a button to launch an 'openNewStage' method, passing it the root pane.</div>
+<pre class="code">
+someButton.setOnAction((ActionEvent ae) -> openNewStage(root));
+</pre>
+
+<div>Create the aforementioned method which will open the new stage.</div>
+<pre class="code">
+public static void openNewStage(Pane parent) {
+    StageTwo newStage = new StageTwo(parent);
+}
+</pre>
+
+<div>You'll need an entirely new Java class for the new stage, here is a basic example. It has been designed to disable the parent stage's root pane when the new stage opens, freezing all the controls on that stage, and re-enable the parent stage when it is closed. Note the static 'parent' field that stores the original stage's root pane.</div>
+<pre class="code">
+public class StageTwo {
+
+    static Pane parent;
+
+    public StageTwo(Pane theParent) {
+
+        Stage stage = new Stage();
+        parent = theParent;
+        parent.setDisable(true);
+        start(stage);
+
+    }
+
+    public void start(Stage stage) {
+
+        Pane root = new Pane();
+        Scene scene = new Scene(root, 1024, 768);
+        stage.setTitle("This is another scene.");
+        stage.setScene(scene);
+        stage.setOnCloseRequest((WindowEvent we) -> closeStage(stage));
+        stage.show();
+
+    }
+
+    public void closeStage(Stage stage) {
+
+        parent.setDisable(false);
+        stage.close();
+
+    }
+
+}
+</pre>
+
+<h3>Add an exit confirmation prompt</h3>
+<div>First, add this to your 'start' method, just before <code>stage.show();</code></div>
+<pre class="code">
+stage.setOnCloseRequest((WindowEvent we) -> exitPrompt(we));
+</pre>  
+<div>Then add this method to your class.</div>
+<pre class="code">
+public static void exitPrompt(WindowEvent we) {
+
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirmation Dialog");
+    alert.setHeaderText("Are you sure you want to exit?");
+
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.get() == ButtonType.OK){
+        System.exit(0);
+    } else {
+        we.consume();
+    }
+
+}
+</pre>  
+
 <h2>Panes</h2>
 
 <h3>Make a VBox (vertical box) filled with buttons</h3>
@@ -297,123 +369,6 @@ for (int i = 1; i <= 256; i++) {
 }
 </pre>
 
-<h3>Add a menu bar</h3>
-<div>First, your root pane needs to be a VBox. If you already have a different root pane (e.g. a BorderPane), rename it from root to something else (don't change it's class) before making a new VBox root.</div>
-<pre class="code">
-VBox root = new VBox();
-</pre>
-<div>Here is the code to create a menubar with three menus, each with three items.</div>
-<pre class="code">
-MenuBar myMenu = new MenuBar();
-
-Menu numbersMenu = new Menu("Numbers");
-MenuItem numbersItem1 = new MenuItem("One");
-MenuItem numbersItem2 = new MenuItem("Two");
-MenuItem numbersItem3 = new MenuItem("Three");
-numbersMenu.getItems().addAll(numbersItem1, numbersItem2, numbersItem3);
-
-Menu coloursMenu = new Menu("Colours");
-MenuItem coloursItem1 = new MenuItem("Red");
-MenuItem coloursItem2 = new MenuItem("Green");
-MenuItem coloursItem3 = new MenuItem("Blue");
-coloursMenu.getItems().addAll(coloursItem1, coloursItem2, coloursItem3);
-
-Menu shapesMenu = new Menu("Shapes");
-MenuItem shapesItem1 = new MenuItem("Triangle");
-MenuItem shapesItem2 = new MenuItem("Square");
-MenuItem shapesItem3 = new MenuItem("Circle");
-shapesMenu.getItems().addAll(shapesItem1, shapesItem2, shapesItem3);
-
-myMenu.getMenus().addAll(numbersMenu, coloursMenu, shapesMenu);
-root.getChildren().add(myMenu);
-</pre>
-<div>Finally, if you were using a BorderPane (or similar) originally and want that under the menu, you will need to bind the BorderPane's height to that of the root VBox so it fills the space.</div>
-<pre class="code">
-BorderPane borderPane = new BorderPane();
-borderPane.prefHeightProperty().bind(root.heightProperty());
-root.getChildren().add(borderPane);
-</pre>
-
-
-<h3>Open a new stage</h3>
-<div>First, set up a button to launch an 'openNewStage' method, passing it the root pane.</div>
-<pre class="code">
-someButton.setOnAction((ActionEvent ae) -> openNewStage(root));
-</pre>
-
-<div>Create the aforementioned method which will open the new stage.</div>
-<pre class="code">
-public static void openNewStage(Pane parent) {
-    StageTwo newStage = new StageTwo(parent);
-}
-</pre>
-
-<div>You'll need an entirely new Java class for the new stage, here is a basic example. It has been designed to disable the parent stage's root pane when the new stage opens, freezing all the controls on that stage, and re-enable the parent stage when it is closed. Note the static 'parent' field that stores the original stage's root pane.</div>
-<pre class="code">
-public class StageTwo {
-
-    static Pane parent;
-
-    public StageTwo(Pane theParent) {
-
-        Stage stage = new Stage();
-        parent = theParent;
-        parent.setDisable(true);
-        start(stage);
-
-    }
-
-    public void start(Stage stage) {
-
-        Pane root = new Pane();
-        Scene scene = new Scene(root, 1024, 768);
-        stage.setTitle("This is another scene.");
-        stage.setScene(scene);
-        stage.setOnCloseRequest((WindowEvent we) -> closeStage(stage));
-        stage.show();
-
-    }
-
-    public void closeStage(Stage stage) {
-
-        parent.setDisable(false);
-        stage.close();
-
-    }
-
-}
-</pre>
-
-<h2>Non-trivial controls</h2>
-
-<h3>Set up a ComboBox</h3>
-<div>Replace root with the target pane. In this example, the first item (index 0) has been pre-selected.</div>
-<pre class="code">
-ObservableList<String> options = FXCollections.observableArrayList("Option 1", "Option 2", "Option 3");
-ComboBox comboBox = new ComboBox(options);
-comboBox.getSelectionModel().select(0);
-
-root.getChildren().add(comboBox);
-</pre>  
-
-<h3>Set up Sliders and ProgressBars</h3>
-<div>In this example, the slider controls the progress bar, but a listener can be added to many other properties. The root pane is a VBox, so change as required.</div>
-<pre class="code">
-Slider slider = new Slider();
-slider.setMin(0);
-slider.setMax(100);
-slider.setValue(50);
-
-ProgressBar progressBar = new ProgressBar();
-progressBar.setPrefSize(400, 30);
-progressBar.setProgress(0.5);
-
-slider.valueProperty().addListener(
-        (observable, old_value, new_value) -> progressBar.setProgress(new_value.doubleValue() / 100)
-);
-
-root.getChildren().addAll(slider, progressBar);
-</pre>  
 
 <h3>Set up an Accordion</h3>
 <div>In this example, the buttons are added lazily. In reality, you need to define your controls on seperate lines of code or they won't actually do anything.</div>
@@ -450,7 +405,7 @@ shapesPane.setContent(shapesVBox);
 root.getPanes().addAll(numbersPane, coloursPane, shapesPane);
 </pre>  
 
-<h3>Set up an TabPane</h3>
+<h3>Set up a TabPane</h3>
 <div>This is exceedingly similar to the Accordion.</div>
 <pre class="code">
 TabPane root = new TabPane();
@@ -488,63 +443,132 @@ shapesTab.setContent(shapesVBox);
 root.getTabs().addAll(numbersTab, coloursTab, shapesTab);
 </pre>
 
+<h2>Non-trivial controls</h2>
+
+<h3>Set up a ComboBox</h3>
+<div>Replace root with the target pane. In this example, the first item (index 0) has been pre-selected.</div>
+<pre class="code">
+ObservableList<String> options = FXCollections.observableArrayList("Option 1", "Option 2", "Option 3");
+ComboBox comboBox = new ComboBox(options);
+comboBox.getSelectionModel().select(0);
+
+root.getChildren().add(comboBox);
+</pre>  
+
+<h3>Set up Sliders and ProgressBars</h3>
+<div>In this example, the slider controls the progress bar, but a listener can be added to many other properties. The root pane is a VBox, so change as required.</div>
+<pre class="code">
+Slider slider = new Slider();
+slider.setMin(0);
+slider.setMax(100);
+slider.setValue(50);
+
+ProgressBar progressBar = new ProgressBar();
+progressBar.setPrefSize(400, 30);
+progressBar.setProgress(0.5);
+
+slider.valueProperty().addListener(
+        (observable, old_value, new_value) -> progressBar.setProgress(new_value.doubleValue() / 100)
+);
+
+root.getChildren().addAll(slider, progressBar);
+</pre>  
+
+<h3>Add a menu bar</h3>
+<div>First, your root pane needs to be a VBox. If you already have a different root pane (e.g. a BorderPane), rename it from root to something else (don't change it's class) before making a new VBox root.</div>
+<pre class="code">
+VBox root = new VBox();
+</pre>
+<div>Here is the code to create a menubar with three menus, each with three items.</div>
+<pre class="code">
+MenuBar myMenu = new MenuBar();
+
+Menu numbersMenu = new Menu("Numbers");
+MenuItem numbersItem1 = new MenuItem("One");
+MenuItem numbersItem2 = new MenuItem("Two");
+MenuItem numbersItem3 = new MenuItem("Three");
+numbersMenu.getItems().addAll(numbersItem1, numbersItem2, numbersItem3);
+
+Menu coloursMenu = new Menu("Colours");
+MenuItem coloursItem1 = new MenuItem("Red");
+MenuItem coloursItem2 = new MenuItem("Green");
+MenuItem coloursItem3 = new MenuItem("Blue");
+coloursMenu.getItems().addAll(coloursItem1, coloursItem2, coloursItem3);
+
+Menu shapesMenu = new Menu("Shapes");
+MenuItem shapesItem1 = new MenuItem("Triangle");
+MenuItem shapesItem2 = new MenuItem("Square");
+MenuItem shapesItem3 = new MenuItem("Circle");
+shapesMenu.getItems().addAll(shapesItem1, shapesItem2, shapesItem3);
+
+myMenu.getMenus().addAll(numbersMenu, coloursMenu, shapesMenu);
+root.getChildren().add(myMenu);
+</pre>
+<div>Finally, if you were using a BorderPane (or similar) originally and want that under the menu, you will need to bind the BorderPane's height to that of the root VBox so it fills the space.</div>
+<pre class="code">
+BorderPane borderPane = new BorderPane();
+borderPane.prefHeightProperty().bind(root.heightProperty());
+root.getChildren().add(borderPane);
+</pre>
+
 <h3>Set up a TableView</h3>
-<pre class="code" style="background-color: pink;">
-... under construction ...
-</pre>  
+<div>TableViews require model classes set up with JavaFX properties. Here is an example called <strong>Person.java</strong></div>
+<pre class="code" style="background-color: #cceecc;">
+import javafx.beans.property.SimpleStringProperty;
 
-<br />
-<div>For the full list of JavaFX Controls, <a href="https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/ui_controls.htm">visit Oracle's site</a></div>
+public class Person {
+    private final SimpleStringProperty firstName;
+    private final SimpleStringProperty lastName;
+    private final SimpleStringProperty email;
 
-<h2>More window and input controls</h2>
-
-<h3>Add an exit confirmation prompt</h3>
-<div>First, add this to your 'start' method, just before <code>stage.show();</code></div>
-<pre class="code">
-stage.setOnCloseRequest((WindowEvent we) -> exitPrompt(we));
-</pre>  
-<div>Then add this method to your class.</div>
-<pre class="code">
-public static void exitPrompt(WindowEvent we) {
-
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Confirmation Dialog");
-    alert.setHeaderText("Are you sure you want to exit?");
-
-    Optional<ButtonType> result = alert.showAndWait();
-    if (result.get() == ButtonType.OK){
-        System.exit(0);
-    } else {
-        we.consume();
+    public Person(String firstName, String lastName, String email) {
+        this.firstName = new SimpleStringProperty(firstName);
+        this.lastName = new SimpleStringProperty(lastName);
+        this.email = new SimpleStringProperty(email);
     }
 
-}
-</pre>  
+    public String getFirstName() { return firstName.get(); }
+    public void setFirstName(String firstName) { this.firstName.set(firstName); }
+    
+    public String getLastName() { return lastName.get(); }
+    public void setLastName(String lastName) { this.lastName.set(lastName); }
 
-<h3>Create a set of 'pressed keys'</h3>
-<div>Add this to the top of class (just after <code>public class ... {</code>)</div>
-<pre class="code">
-static HashSet<KeyCode> keysPressed = new HashSet<>();
-</pre>  
-<div>Then, add this just before <code>stage.show();</code> in your 'start' method.</div> 
-<pre class="code">
-scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> keysPressed.add(event.getCode()));
-scene.addEventFilter(KeyEvent.KEY_RELEASED, event -> keysPressed.remove(event.getCode()));
-</pre>
-<div>Finally, any time you want to check what keys are pressed, use this:</div>
-<pre class="code">
-for(KeyCode k : keysPressed) {
-    if (k == KeyCode.A) {
-        // Code goes here
-    }
-    else if (k == KeyCode.B) {
-        // More code goes here
-    }
-    //etc...
+    public String getEmail() { return email.get(); }
+    public void setEmail(String email) { this.email.set(email); }
 }
 </pre>
+<div>Once the model class exists, a list of objects can be prepared in the scene's 'start' method ready to view in the table:</div>
+<pre class="code">
+ObservableList&lt;Person&gt; people = FXCollections.observableArrayList(
+        new Person("Jacob", "Smith", "jacob.smith@example.com"),
+        new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
+        new Person("Ethan", "Williams", "ethan.williams@example.com"),
+        new Person("Emma", "Jones", "emma.jones@example.com"),
+        new Person("Michael", "Brown", "michael.brown@example.com")
+);
+</pre>
+<div>To create the actual table, carefully link each column to the appropriate property in the model class.</div>
+<pre class="code">
+TableView<Person> table = new TableView&lt;&gt;();
+table.setPrefSize(400, 300);
+table.setItems(people);
 
-<h2>Graphics</h2>
+TableColumn<Person, String> firstNameColumn = new TableColumn&lt;&gt;("First Name");
+firstNameColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;("firstName"));
+table.getColumns().add(firstNameColumn);
+
+TableColumn<Person, String> lastNameColumn = new TableColumn&lt;&gt;("Last Name");
+lastNameColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;("lastName"));
+table.getColumns().add(lastNameColumn);
+
+TableColumn<Person, String> emailColumn = new TableColumn&lt;&gt;("Email");
+emailColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;("email"));
+table.getColumns().add(emailColumn);
+
+root.getChildren().add(table);
+</pre>  
+
+<h2>Graphics and real time interactivity</h2>
 
 <h3>Make a window full screen</h3>
 <div>First, change your scene constructor to omit the size.</div>
@@ -607,6 +631,29 @@ Image cake = new Image("cake.png");
 <pre class="code">
 gc.drawImage(cake, 0,0);
 </pre>  
+
+<h3>Create a set of 'pressed keys'</h3>
+<div>Add this to the top of class (just after <code>public class ... {</code>)</div>
+<pre class="code">
+static HashSet<KeyCode> keysPressed = new HashSet&lt;&gt;();
+</pre>  
+<div>Then, add this just before <code>stage.show();</code> in your 'start' method.</div> 
+<pre class="code">
+scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> keysPressed.add(event.getCode()));
+scene.addEventFilter(KeyEvent.KEY_RELEASED, event -> keysPressed.remove(event.getCode()));
+</pre>
+<div>Finally, any time you want to check what keys are pressed, use this:</div>
+<pre class="code">
+for(KeyCode k : keysPressed) {
+    if (k == KeyCode.A) {
+        // Code goes here
+    }
+    else if (k == KeyCode.B) {
+        // More code goes here
+    }
+    //etc...
+}
+</pre>
 
 <h3>Set up a repeating event</h3>
 <div>If you want something to happen at a full 60 frames per second, use an AnimationTimer object.</div>
